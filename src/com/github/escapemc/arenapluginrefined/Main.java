@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.escapemc.arenapluginrefined.bases.ArenaManager;
+
 public class Main extends JavaPlugin {
 
 	PluginDescriptionFile pdfFile = getDescription();
@@ -24,6 +26,8 @@ public class Main extends JavaPlugin {
 		logger.info("Disabling " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
 		
 	}
+	
+	ArenaManager am = new ArenaManager();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -51,27 +55,29 @@ public class Main extends JavaPlugin {
 					}else{
 					
 						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Arena named " + args[2]);
-					
+						am.addArena(args[2]);
+						
 					}
 					
-				}else if(args[1].equalsIgnoreCase("team")) {
-					
-					if(args.length < 3 && args.length > 1) {
+				}
+
+				if(args[1].equalsIgnoreCase("team")) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the arena.");
-						
+					if(args.length > 3) {
+							
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the team.");
+							
 					}else{
 						
-						if(arenaNames.contains(args[3])) {
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Team named " + args[2]);
+						am.addTeam(args[2]);
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Team named " + args[2] + " in Arena named " + args[3]);
-						
-						}else{
-							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not an Arena.");
-						}
-						
 					}
+					
+					
+				}else{
+					
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You cannot make a(n) " + args[1] + ".");
 					
 				}
 					
@@ -79,11 +85,11 @@ public class Main extends JavaPlugin {
 					
 				if(args[1].equalsIgnoreCase("arenas")) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Arenas: " + arenaNames.toString());
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Arenas: " + am.listArenas());
 					
 				}else if(args[1].equalsIgnoreCase("teams")) {
 						
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Teams: " + teamNames.toString());
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Teams: " + am.listTeams());
 						
 				}else{
 						
@@ -94,9 +100,9 @@ public class Main extends JavaPlugin {
 			}
 			
 		}
-
+			
 		return false;
-		
+				
 	}
 		
 }

@@ -9,6 +9,7 @@ public class ArenaManager {
 	
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
 	private ArrayList<Team> teams = new ArrayList<Team>();
+	private String phs;
 	
 	public ArenaManager() {
 		
@@ -45,6 +46,33 @@ public class ArenaManager {
     	arenas.add(new Arena(name));
 
     }
+ 
+    public void addTeam(String name) {
+    	
+    	teams.add(new Team(name));
+    
+    }
+    
+    public String listArenas() {
+    	    	
+    	for(Arena a : arenas) {
+    		
+    		phs = phs + a.getName();
+    		
+    	}return phs;
+    	
+    }
+
+    public String listTeams() {
+    	
+    	for(Team a : teams) {
+    		
+    		phs = phs + a.getName();
+    		
+    	}return phs;
+    	
+    }
+
 	
 	public class Arena {
 		   
@@ -56,12 +84,6 @@ public class ArenaManager {
 	        
         }
         	     
-        public void addTeam(String name) {
-        	
-        	teams.add(new Team(name));
-        
-        }
-
         public String getName() {
 	        
         	return name;
