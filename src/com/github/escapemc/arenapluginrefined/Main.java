@@ -1,6 +1,5 @@
 package com.github.escapemc.arenapluginrefined;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -25,9 +24,6 @@ public class Main extends JavaPlugin {
 		logger.info("Disabling " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
 		
 	}
-
-	public ArrayList<String> arenaNames = new ArrayList<String>();
-	public ArrayList<String> teamNames = new ArrayList<String>();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

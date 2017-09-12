@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import com.github.escapemc.arenapluginrefined.Main;
-
-public class MainBase {
+public class ArenaManager {
 	
-	public ArrayList<Arena> arenas = new ArrayList<Arena>();
-	public ArrayList<Team> teams = new ArrayList<Team>();
+	private ArrayList<Arena> arenas = new ArrayList<Arena>();
+	private ArrayList<Team> teams = new ArrayList<Team>();
 	
-	public MainBase() {
+	public ArenaManager() {
 		
 		
 		
@@ -47,13 +45,6 @@ public class MainBase {
     	arenas.add(new Arena(name));
 
     }
-
-    public void addTeam(String name) {
-    	
-    	teams.add(new Team(name));
-    
-    }
-
 	
 	public class Arena {
 		   
@@ -65,6 +56,11 @@ public class MainBase {
 	        
         }
         	     
+        public void addTeam(String name) {
+        	
+        	teams.add(new Team(name));
+        
+        }
 
         public String getName() {
 	        
