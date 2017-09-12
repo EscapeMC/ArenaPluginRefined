@@ -9,8 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.escapemc.arenapluginrefined.bases.MainBase;
-
 public class Main extends JavaPlugin {
 
 	PluginDescriptionFile pdfFile = getDescription();
@@ -28,8 +26,8 @@ public class Main extends JavaPlugin {
 		
 	}
 
-	public static ArrayList<String> arenaNames = new ArrayList<String>();
-	public static ArrayList<String> teamNames = new ArrayList<String>();
+	public ArrayList<String> arenaNames = new ArrayList<String>();
+	public ArrayList<String> teamNames = new ArrayList<String>();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -56,7 +54,7 @@ public class Main extends JavaPlugin {
 						
 					}else{
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Arena named " + args[2]);
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Arena named " + args[2]);
 					
 					}
 					

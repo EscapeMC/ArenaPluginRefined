@@ -45,15 +45,13 @@ public class MainBase {
     public void addArena(String name) {
     	
     	arenas.add(new Arena(name));
-    	Main.arenaNames.add(name);
-    	
+
     }
 
     public void addTeam(String name) {
     	
     	teams.add(new Team(name));
-    	Main.teamNames.add(name);
-    	
+    
     }
 
 	
