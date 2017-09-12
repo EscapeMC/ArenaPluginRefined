@@ -1,0 +1,9 @@
+main: com.github.escapemc.arenapluginrefined.Main
+name: ArenaPlugin
+version: 1.0.1
+author: EscapeMC
+description: A plugin made for Arenas or Dueling.
+commands:
+  arena:
+    description: Lists all commands for ArenaPlugin
+    default: true
