@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 public class ArenaManager {
 	
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
-	private ArrayList<Team> teams = new ArrayList<Team>();
 	private String phs;
 	
 	public ArenaManager() {
@@ -29,30 +28,12 @@ public class ArenaManager {
     
     }
 	
-	public Team getTeamByName(String name) {
-		
-		for (Team t : teams) {
-			
-			if(t.getName().equalsIgnoreCase(name)) return t;
-			
-		}
-		
-		return null;
-		
-	}
-
     public void addArena(String name) {
     	
     	arenas.add(new Arena(name));
 
     }
- 
-    public void addTeam(String name) {
-    	
-    	teams.add(new Team(name));
-    
-    }
-    
+     
     public String listArenas() {
     	    	
     	for(Arena a : arenas) {
@@ -64,23 +45,11 @@ public class ArenaManager {
     	return phs;
     	
     }
-
-    public String listTeams() {
-    	
-    	for(Team a : teams) {
-    		
-    		phs = phs + a.getName();
-    		
-    	}
-    	
-    	return phs;
-    	
-    }
-
 	
 	public class Arena {
 		   
         private final String name;
+    	private ArrayList<Team> teams = new ArrayList<Team>();
 	     
         public Arena(String name) {
 	        
@@ -92,6 +61,36 @@ public class ArenaManager {
 	        
         	return name;
 	        
+        }
+    
+        public void addTeam(String name) {
+        	
+        	teams.add(new Team(name));
+        
+        }
+
+        public Team getTeamByName(String name) {
+    		
+    		for (Team t : teams) {
+    			
+    			if(t.getName().equalsIgnoreCase(name)) return t;
+    			
+    		}
+    		
+    		return null;
+    		
+    	}
+      
+        public String listTeams() {
+        	
+        	for(Team t : teams) {
+        		
+        		phs = phs + t.getName();
+        		
+        	}
+        	
+        	return phs;
+        
         }
 	     
         public void sendBrodcast() {
