@@ -9,6 +9,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.escapemc.arenapluginrefined.bases.ArenaManager;
+import com.github.escapemc.arenapluginrefined.bases.ArenaManager.Arena;
 
 public class Main extends JavaPlugin {
 
@@ -69,9 +70,19 @@ public class Main extends JavaPlugin {
 							
 					}else{
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Team named " + args[2]);
-						am.addTeam(args[2]);
+						if(am.getArenaByName(args[3]).equals(null)) {
 							
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[3] + " is not an arena.");
+							
+						}else{
+							
+							//arena create team [name] [arena]
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Team named " + args[2]);
+							am.addTeam(args[2]);
+							
+							
+						}
+						
 					}
 					
 					
