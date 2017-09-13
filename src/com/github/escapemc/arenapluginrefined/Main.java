@@ -48,9 +48,10 @@ public class Main extends JavaPlugin {
 				
 				if(args[1].equalsIgnoreCase("arena")) {
 					
-					if(args.length > 3) {
+					if(args.length < 3 && args.length > 1) {
 						
 						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the arena.");
+						return true;
 						
 					}else{
 					
@@ -59,13 +60,12 @@ public class Main extends JavaPlugin {
 						
 					}
 					
-				}
-
-				if(args[1].equalsIgnoreCase("team")) {
+				}else if(args[1].equalsIgnoreCase("team")) {
 						
 					if(args.length > 3) {
 							
 						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the team.");
+						return true;
 							
 					}else{
 						
@@ -100,7 +100,7 @@ public class Main extends JavaPlugin {
 			}
 			
 		}
-			
+				
 		return false;
 				
 	}

@@ -21,7 +21,7 @@ public class ArenaManager {
 		
         for (Arena a : arenas) {
         
-        	if (a.getName().equals(name)) return a;
+        	if (a.getName().equalsIgnoreCase(name)) return a;
     
         }
      
@@ -33,7 +33,7 @@ public class ArenaManager {
 		
 		for (Team t : teams) {
 			
-			if(t.getName().equals(name)) return t;
+			if(t.getName().equalsIgnoreCase(name)) return t;
 			
 		}
 		
@@ -59,7 +59,9 @@ public class ArenaManager {
     		
     		phs = phs + a.getName();
     		
-    	}return phs;
+    	}
+    	
+    	return phs;
     	
     }
 
@@ -69,7 +71,9 @@ public class ArenaManager {
     		
     		phs = phs + a.getName();
     		
-    	}return phs;
+    	}
+    	
+    	return phs;
     	
     }
 
