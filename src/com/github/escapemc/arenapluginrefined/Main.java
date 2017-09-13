@@ -1,8 +1,11 @@
 package com.github.escapemc.arenapluginrefined;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -10,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.escapemc.arenapluginrefined.bases.ArenaManager;
 import com.github.escapemc.arenapluginrefined.bases.ArenaManager.Arena;
+import com.github.escapemc.arenapluginrefined.bases.ArenaManager.Team;
 
 public class Main extends JavaPlugin {
 
@@ -27,8 +31,11 @@ public class Main extends JavaPlugin {
 		logger.info("Disabling " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
 		
 	}
-	
+		
 	ArenaManager am = new ArenaManager();
+	private Arena arena;
+	private Team team;
+	private String playerName;
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -40,12 +47,71 @@ public class Main extends JavaPlugin {
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin Commands:");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena - lists all of the commands in ArenaPlugin");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena create [thing] [name] - will create the specified thing");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arnea list [thing to list]");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arnea list [thing to list] - lists the items in the selected thing to list");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena join [team] [arena] {player name} - will add a player to a team");
 				return true;
 				
 			}
+			
+			if(args[0].equalsIgnoreCase("join")) {
+				
+				//arena join team arena name
+				
+				if(args.length < 2) {
+					
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena join [team] [arena] {player name}");
+				
+				}else if(args.length < 3) {
+					
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify in what arena to join.");
+					
+				}else{
+					
+					arena = am.getArenaByName(args[2]);
+					team = arena.getTeamByName(args[1]);
+					
+					if(team == null) {
 						
-			if(args[0].equalsIgnoreCase("create")) {
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not a team.");
+						
+					}else if(arena == null) {
+						
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not an arena.");
+					
+					}else if(args.length < 4) {
+						playerName = sender.getName();
+						@SuppressWarnings("deprecation")
+						OfflinePlayer op = Bukkit.getPlayer(playerName);
+						UUID uuid = op.getUniqueId();
+						team.addPlayer(uuid);
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Added " + playerName + " to the " + args[1] + " team.");
+					
+					}else if (args.length < 5) {
+					
+						if(Bukkit.getServer().getOnlinePlayers().contains(args[4])) {
+						
+							playerName = args[4];
+							@SuppressWarnings("deprecation")
+							OfflinePlayer op = Bukkit.getPlayer(playerName);
+							UUID uuid = op.getUniqueId();
+							team.addPlayer(uuid);
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Added " + playerName + " to the " + args[1] + " team.");
+							
+						}else{
+							
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[4] + " cannot be found.");
+							
+						}
+						
+					}else{
+						
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Something broke.");
+						
+					}
+					
+				}
+				
+			}else if(args[0].equalsIgnoreCase("create")) {
 				
 				if(args[1].equalsIgnoreCase("arena")) {
 					
@@ -63,14 +129,21 @@ public class Main extends JavaPlugin {
 					
 				}else if(args[1].equalsIgnoreCase("team")) {
 						
-					if(args.length > 3) {
+					if(args.length < 3) {
 							
 						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the team.");
 						return true;
 							
+					}else if(args.length < 4) {
+						
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify an Arena to create the team for.");
+						return true;
+						
 					}else{
 						
-						if(am.getArenaByName(args[3]).equals(null)) {
+						arena = am.getArenaByName(args[3]);
+
+						if(arena == (null)) {
 							
 							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[3] + " is not an arena.");
 							
@@ -78,7 +151,7 @@ public class Main extends JavaPlugin {
 							
 							//arena create team [name] [arena]
 							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Team named " + args[2]);
-							am.addTeam(args[2]);
+							arena.addTeam(args[2]);
 							
 							
 						}
@@ -96,11 +169,30 @@ public class Main extends JavaPlugin {
 					
 				if(args[1].equalsIgnoreCase("arenas")) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Arenas: " + am.listArenas());
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Arenas:" + am.listArenas());
 					
 				}else if(args[1].equalsIgnoreCase("teams")) {
+					
+					//arena list teams [arena]
+					if(args.length < 3) {
 						
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Teams: " + am.listTeams());
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify an arena to list the teams for.");
+						
+					}else{
+						
+						arena = am.getArenaByName(args[2]);
+
+						if(arena == null) {
+							
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "The specified arena is not an arena.");
+						
+						}else{
+
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Teams:" + arena.listTeams());
+						
+						}
+							
+					}
 						
 				}else{
 						
@@ -108,6 +200,10 @@ public class Main extends JavaPlugin {
 						
 				}
 					
+			}else{
+				
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "Invalid command.");
+				
 			}
 			
 		}

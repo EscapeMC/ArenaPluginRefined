@@ -1,6 +1,7 @@
 package com.github.escapemc.arenapluginrefined.bases;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,7 +10,7 @@ public class ArenaManager {
 	
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
 	private String phs;
-	
+		
 	public ArenaManager() {
 		
 		
@@ -36,9 +37,10 @@ public class ArenaManager {
      
     public String listArenas() {
     	    	
+    	phs = " ";
     	for(Arena a : arenas) {
     		
-    		phs = phs + a.getName();
+    		phs = phs + a.getName() + " ";
     		
     	}
     	
@@ -85,7 +87,8 @@ public class ArenaManager {
         	
         	for(Team t : teams) {
         		
-        		phs = phs + t.getName();
+        		phs = " ";
+        		phs = phs + t.getName() + " ";
         		
         	}
         	
@@ -104,6 +107,7 @@ public class ArenaManager {
 	public class Team {
 		
 		private final String name;
+		private ArrayList<UUID> players = new ArrayList<UUID>();
 		
 		public Team(String name) {
 			
@@ -116,6 +120,13 @@ public class ArenaManager {
 			return name;
 			
 		}
+		
+		public void addPlayer(UUID player) {
+			
+			players.add(player);
+			
+		}
+		
 		
 	}
 	
