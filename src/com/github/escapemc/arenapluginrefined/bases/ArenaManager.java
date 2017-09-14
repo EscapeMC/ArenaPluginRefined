@@ -1,10 +1,13 @@
 package com.github.escapemc.arenapluginrefined.bases;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class ArenaManager {
 	
@@ -50,8 +53,10 @@ public class ArenaManager {
 	
 	public class Arena {
 		   
-        private final String name;
-    	private ArrayList<Team> teams = new ArrayList<Team>();
+        private String name;
+        private String phrase;
+        private String playerName;
+        private ArrayList<Team> teams = new ArrayList<Team>();
 	     
         public Arena(String name) {
 	        
@@ -64,8 +69,70 @@ public class ArenaManager {
         	return name;
 	        
         }
-    
-        public void addTeam(String name) {
+
+        public String removedPlayerFromTeamsString(String uuid, String name) {
+			
+        	phrase = "";
+			for(@SuppressWarnings("unused") Arena a : arenas) {
+				
+				for(Team t : teams) {
+					
+					if(t.players.contains(uuid)) {
+						
+						phrase = t.getName().toString();
+						
+					}
+					
+				}
+				
+			}
+			return phrase;
+			
+		}
+        
+        public void teleportTeams() {
+
+    		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+    		
+				playerName = p.getName();
+				@SuppressWarnings("deprecation")
+				OfflinePlayer op = Bukkit.getPlayer(playerName);
+				String uuid = op.getUniqueId().toString();
+    			
+    			for(Team t : teams) {
+        		        		
+    				if(t.players.toString().contains(uuid)) {
+        			
+    					p.teleport(t.teleLoc);
+    					p.sendMessage(ChatColor.LIGHT_PURPLE + "A fight has begun in the arena!");
+    					
+    				}
+        			
+        		}
+        		
+        	}
+        	
+        }
+        
+		public void removedPlayerFromTeams(String uuid) {
+			
+			for(@SuppressWarnings("unused") Arena a : arenas) {
+				
+				for(Team t : teams) {
+					
+					if(t.players.contains(uuid)) {
+						
+						t.players.remove(uuid);
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+
+		public void addTeam(String name) {
         	
         	teams.add(new Team(name));
         
@@ -107,11 +174,50 @@ public class ArenaManager {
 	public class Team {
 		
 		private final String name;
-		private ArrayList<UUID> players = new ArrayList<UUID>();
+		private ArrayList<String> players = new ArrayList<String>();
+		private double posX;
+		private double posY;
+		private double posZ;
+		private Location teleLoc;
+		private String words;
+		private World world;
 		
 		public Team(String name) {
 			
 			this.name = name;
+			
+		}
+		
+		public Location teleportLocation(Player playerIn) {
+			
+			posX = playerIn.getLocation().getX();
+			posY = playerIn.getLocation().getY();
+			posZ = playerIn.getLocation().getZ();
+			world = playerIn.getLocation().getWorld();
+			
+			Location loc = new Location(world, posX, posY, posZ);
+			
+			return loc;
+			
+			
+		}
+				
+		public String teleportLocationString(Player playerIn) {
+			
+			posX = playerIn.getLocation().getX();
+			posY = playerIn.getLocation().getY();
+			posZ = playerIn.getLocation().getZ();
+			
+			words = posX + " " + posY + " " + posZ;
+			
+			return words;
+			
+			
+		}
+		
+		public void setTeleportLocation(Location loc) {
+			
+			teleLoc = loc;
 			
 		}
 		
@@ -121,9 +227,9 @@ public class ArenaManager {
 			
 		}
 		
-		public void addPlayer(UUID player) {
+		public void addPlayer(String uuid) {
 			
-			players.add(player);
+			players.add(uuid);
 			
 		}
 		
