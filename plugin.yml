@@ -6,4 +6,4 @@ description: A plugin made for Arenas or Dueling.
 commands:
   arena:
     description: Lists all commands for ArenaPlugin
-    default: true
+    default: false

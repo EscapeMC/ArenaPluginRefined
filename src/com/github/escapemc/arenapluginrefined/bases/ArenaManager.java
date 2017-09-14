@@ -13,6 +13,7 @@ public class ArenaManager {
 	
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
 	private String phs;
+	private String phrase;
 		
 	public ArenaManager() {
 		
@@ -32,11 +33,39 @@ public class ArenaManager {
     
     }
 	
-    public void addArena(String name) {
+    public String getArenaAndTeam(String uuid) {
+		
+    	phrase = "";
+		for(Arena a : arenas) {
+			
+			phrase = a.getName().toString();
+			
+			for(Team t : a.teams) {
+				
+				if(t.players.contains(uuid)) {
+					
+					phrase = phrase + ": " + t.getName().toString();
+					
+				}
+				
+			}
+			
+		}
+		return phrase;
+		
+	}
+	
+	public void addArena(String name) {
     	
     	arenas.add(new Arena(name));
 
     }
+	
+	public void deleteArena(String name) {
+		
+		arenas.remove(this.getArenaByName(name));
+		
+	}
      
     public String listArenas() {
     	    	
@@ -54,9 +83,11 @@ public class ArenaManager {
 	public class Arena {
 		   
         private String name;
-        private String phrase;
         private String playerName;
         private ArrayList<Team> teams = new ArrayList<Team>();
+        private Arena arena1;
+        
+        ArenaManager am = new ArenaManager();
 	     
         public Arena(String name) {
 	        
@@ -69,26 +100,6 @@ public class ArenaManager {
         	return name;
 	        
         }
-
-        public String removedPlayerFromTeamsString(String uuid, String name) {
-			
-        	phrase = "";
-			for(@SuppressWarnings("unused") Arena a : arenas) {
-				
-				for(Team t : teams) {
-					
-					if(t.players.contains(uuid)) {
-						
-						phrase = t.getName().toString();
-						
-					}
-					
-				}
-				
-			}
-			return phrase;
-			
-		}
         
         public void teleportTeams() {
 
@@ -137,6 +148,14 @@ public class ArenaManager {
         	teams.add(new Team(name));
         
         }
+		
+		public void removeTeam(String arena, String team1) {
+			
+			arena1 = am.getArenaByName(arena);
+			
+			teams.remove(arena1.getTeamByName(team1));
+			
+		}
 
         public Team getTeamByName(String name) {
     		
@@ -152,9 +171,10 @@ public class ArenaManager {
       
         public String listTeams() {
         	
-        	for(Team t : teams) {
+    		phs = " ";
+
+    		for(Team t : teams) {
         		
-        		phs = " ";
         		phs = phs + t.getName() + " ";
         		
         	}
@@ -230,6 +250,12 @@ public class ArenaManager {
 		public void addPlayer(String uuid) {
 			
 			players.add(uuid);
+			
+		}
+		
+		public void removePlayer(String uuid) {
+			
+			players.remove(uuid);
 			
 		}
 		
