@@ -1,6 +1,7 @@
 package com.github.escapemc.arenapluginrefined;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -20,24 +21,24 @@ import com.github.escapemc.arenapluginrefined.bases.ArenaManager.Team;
 public class Main extends JavaPlugin {
 
 	ArenaManager am = new ArenaManager();
-	private ArrayList<String> arenaList = new ArrayList<String>();
+	private List<String> arenaList = new ArrayList<String>();
 
 	PluginDescriptionFile pdfFile = getDescription();
 	Logger logger = getLogger();
 	
-	@SuppressWarnings("unchecked")
 	public void onEnable() {
 		
-		arenaList = (ArrayList<String>) getConfig().getList("arenas");
-		logger.info("ArenaList is: " + arenaList);
+		arenaList = getConfig().getStringList("arenas");
+		logger.info("------ ArenaList is: " + arenaList);
 		
 		if(arenaList == null) {
 			
-			System.out.println("Config for arenas not found.");
+			logger.info("+++ Config for arenas not found.");
 			
 		}else{
 			
 			am.getArenasFromConfig(arenaList);
+			logger.info("**** Config used to load arenas.");
 		
 		}
 		

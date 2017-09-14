@@ -1,6 +1,7 @@
 package com.github.escapemc.arenapluginrefined.bases;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,7 +47,7 @@ public class ArenaManager {
 		
 	}
 	
-	public void getArenasFromConfig(ArrayList<String> arenaNames) {
+	public void getArenasFromConfig(List<String> arenaNames) {
 		
 		for(String s : arenaNames) {
 			
