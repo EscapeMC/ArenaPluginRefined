@@ -1,5 +1,6 @@
 package com.github.escapemc.arenapluginrefined;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -18,22 +19,42 @@ import com.github.escapemc.arenapluginrefined.bases.ArenaManager.Team;
 
 public class Main extends JavaPlugin {
 
+	ArenaManager am = new ArenaManager();
+	private ArrayList<String> arenaList = new ArrayList<String>();
+
 	PluginDescriptionFile pdfFile = getDescription();
 	Logger logger = getLogger();
 	
+	@SuppressWarnings("unchecked")
 	public void onEnable() {
 		
-		logger.info("Enabling " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
+		arenaList = (ArrayList<String>) getConfig().getList("arenas");
+		logger.info("ArenaList is: " + arenaList);
+		
+		if(arenaList == null) {
+			
+			System.out.println("Config for arenas not found.");
+			
+		}else{
+			
+			am.getArenasFromConfig(arenaList);
+		
+		}
+		
+		logger.info("Enabled " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
 		
 	}
 	
 	public void onDisable() {
 		
-		logger.info("Disabling " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
+		am.setConfigArenas();
+		System.out.println(am.arenaConfigNames);
+		getConfig().set("arenas", am.arenaConfigNames.toString());
+		saveConfig();
+		logger.info("Disabled " + pdfFile.getName() + " Version - " + pdfFile.getVersion() + " Made By " + pdfFile.getAuthors());
 		
 	}
 		
-	ArenaManager am = new ArenaManager();
 	private Arena arena;
 	private Team team;
 	private String playerName;
@@ -48,22 +69,22 @@ public class Main extends JavaPlugin {
 			
 			if(args.length < 1) {
 				
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin Commands:");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena - lists all of the commands in ArenaPlugin");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena create <thing> <name> - will create the specified thing");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena delete <thing> <name> - will delete the specifed thing");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arnea list <thing to list> - lists the items in the selected thing to list");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena join <team> <arena> <player name> - will add a player to a team");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena leave <team> <arena> - will remove a player from a team");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena check <player name> - checks for the arena and team of the specified player");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena start <arena name> - Teleports players to the team's spawns to start the arena");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "ArenaPlugin Commands:");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena - lists all of the commands in ArenaPlugin");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena create <thing> <name> - will create the specified thing");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena delete <thing> <name> - will delete the specifed thing");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arnea list <thing to list> - lists the items in the selected thing to list");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena join <team> <arena> <player name> - will add a player to a team");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena leave <team> <arena> - will remove a player from a team");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena check <player name> - checks for the arena and team of the specified player");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena start <arena name> - Teleports players to the team's spawns to start the arena");
 				return true;
 				
 			}else if(args[0].equalsIgnoreCase("check")) {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena check <player name>");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena check <player name>");
 					
 				}else{
 					
@@ -76,17 +97,17 @@ public class Main extends JavaPlugin {
 						something = am.getArenaAndTeam(uuid);
 						if(something.equalsIgnoreCase("")) {
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + playerName + " is not on a team.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + playerName + " is not on a team.");
 						
 						}else{
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + playerName + " is on " + something);							
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + playerName + " is on " + something);							
 						
 						}
 						
 					}else{
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Cannot find that player.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Cannot find that player.");
 						
 					}
 					
@@ -98,11 +119,11 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena setspawn <team> <arena>");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena setspawn <team> <arena>");
 					
 				}else if(args.length < 3) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify which arena to which the team is part of.");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify which arena to which the team is part of.");
 					
 				}else{
 					
@@ -110,11 +131,11 @@ public class Main extends JavaPlugin {
 					team = arena.getTeamByName(args[1]);					
 					if(team == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not a team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not a team.");
 						
 					}else if(arena == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not an arena.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not an arena.");
 					
 					}else{
 						
@@ -122,7 +143,7 @@ public class Main extends JavaPlugin {
 						location = team.teleportLocation(p);
 						team.setTeleportLocation(location);
 						words = team.teleportLocationString(p);
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Spawn of " + args[1] + " to " + words);
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Spawn of " + args[1] + " to " + words);
 						
 					}
 				}
@@ -134,7 +155,7 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena start [arena name]");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena start [arena name]");
 					return true;
 					
 				}else{
@@ -143,7 +164,7 @@ public class Main extends JavaPlugin {
 					
 					if(arena == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not a valid arena.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not a valid arena.");
 						
 					}else{
 					
@@ -159,11 +180,11 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena leave <team> <arena> {player name}");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena leave <team> <arena> {player name}");
 				
 				}else if(args.length < 3) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify in what arena to leave.");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify in what arena to leave.");
 					
 				}else{
 					
@@ -172,11 +193,11 @@ public class Main extends JavaPlugin {
 					
 					if(team == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not a team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not a team.");
 						
 					}else if(arena == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not an arena.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not an arena.");
 					
 					}else if(args.length < 4) {
 
@@ -184,7 +205,7 @@ public class Main extends JavaPlugin {
 						@SuppressWarnings("deprecation")
 						OfflinePlayer op = Bukkit.getPlayer(playerName);
 						String uuid = op.getUniqueId().toString();
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Removed " + playerName + " from any previous team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Removed " + playerName + " from any previous team.");
 						arena.removedPlayerFromTeams(uuid);
 					
 					}else if (args.length < 5) {
@@ -197,18 +218,18 @@ public class Main extends JavaPlugin {
 							@SuppressWarnings("deprecation")
 							OfflinePlayer op = Bukkit.getPlayer(playerName);
 							String uuid = op.getUniqueId().toString();
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Removed " + playerName + " from any previous team.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Removed " + playerName + " from any previous team.");
 							arena.removedPlayerFromTeams(uuid);
 							
 						}else{
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[3] + " cannot be found.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + args[3] + " cannot be found.");
 							
 						}
 						
 					}else{
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Something broke.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Something broke.");
 						
 					}
 					
@@ -220,11 +241,11 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena join <team> <arena> {player name}");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena join <team> <arena> {player name}");
 				
 				}else if(args.length < 3) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify in what arena to join.");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify in what arena to join.");
 					
 				}else{
 					
@@ -233,11 +254,11 @@ public class Main extends JavaPlugin {
 					
 					if(team == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not a team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not a team.");
 						
 					}else if(arena == null) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not an arena.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not an arena.");
 					
 					}else if(args.length < 4) {
 
@@ -245,10 +266,10 @@ public class Main extends JavaPlugin {
 						@SuppressWarnings("deprecation")
 						OfflinePlayer op = Bukkit.getPlayer(playerName);
 						String uuid = op.getUniqueId().toString();
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Removed " + playerName + " from any previous team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Removed " + playerName + " from any previous team.");
 						arena.removedPlayerFromTeams(uuid);
 						team.addPlayer(uuid);
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Added " + playerName + " to the " + args[1] + " team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Added " + playerName + " to the " + args[1] + " team.");
 					
 					}else if (args.length < 5) {
 					
@@ -260,20 +281,20 @@ public class Main extends JavaPlugin {
 							@SuppressWarnings("deprecation")
 							OfflinePlayer op = Bukkit.getPlayer(playerName);
 							String uuid = op.getUniqueId().toString();
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Removed " + playerName + " from any previous team.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Removed " + playerName + " from any previous team.");
 							arena.removedPlayerFromTeams(uuid);
 							team.addPlayer(uuid);
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Added " + playerName + " to the " + args[1] + " team.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Added " + playerName + " to the " + args[1] + " team.");
 							
 						}else{
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[3] + " cannot be found.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + args[3] + " cannot be found.");
 							
 						}
 						
 					}else{
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Something broke.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Something broke.");
 						
 					}
 					
@@ -283,18 +304,18 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena create <thing>");					
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena create <thing>");					
 			
 				}else if(args[1].equalsIgnoreCase("arena")) {
 					
 					if(args.length < 3 && args.length > 1) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the arena.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify a name for the arena.");
 						return true;
 						
 					}else{
 					
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Arena named " + args[2]);
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Created Arena named " + args[2]);
 						am.addArena(args[2]);
 						
 					}
@@ -303,12 +324,12 @@ public class Main extends JavaPlugin {
 						
 					if(args.length < 3) {
 							
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify a name for the team.");
 						return true;
 							
 					}else if(args.length < 4) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify an Arena to create the team for.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify an Arena to create the team for.");
 						return true;
 						
 					}else{
@@ -317,12 +338,12 @@ public class Main extends JavaPlugin {
 
 						if(arena == (null)) {
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[3] + " is not an arena.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + args[3] + " is not an arena.");
 							
 						}else{
 							
 							//arena create team <name> <arena>
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Created Team named " + args[2]);
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Created Team named " + args[2]);
 							arena.addTeam(args[2]);
 							
 							
@@ -332,7 +353,7 @@ public class Main extends JavaPlugin {
 					
 				}else{
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You cannot make a(n) " + args[1] + ".");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You cannot make a(n) " + args[1] + ".");
 					
 				}
 					
@@ -340,18 +361,18 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena delete <arena/team>");					
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena delete <arena/team>");					
 			
 				}else if(args[1].equalsIgnoreCase("arena")) {
 					
 					if(args.length < 3 && args.length > 1) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the arena.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify a name for the arena.");
 						return true;
 						
 					}else{
 					
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Deleted Arena named " + args[2]);
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Deleted Arena named " + args[2]);
 						am.deleteArena(args[2]);
 						
 					}
@@ -360,12 +381,12 @@ public class Main extends JavaPlugin {
 						
 					if(args.length < 3) {
 							
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify a name for the team.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify a name for the team.");
 						return true;
 							
 					}else if(args.length < 4) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify an Arena to create the team for.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify an Arena to create the team for.");
 						return true;
 						
 					}else{
@@ -374,12 +395,12 @@ public class Main extends JavaPlugin {
 
 						if(arena == (null)) {
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + args[3] + " is not an arena.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + args[3] + " is not an arena.");
 							
 						}else{
 							
 							//arena create team <name> <arena>
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Deleted Team named " + args[2]);
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Deleted Team named " + args[2]);
 							arena.removeTeam(args[3], args[2]);
 							
 							
@@ -390,7 +411,7 @@ public class Main extends JavaPlugin {
 					
 				}else{
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "You cannot make a(n) " + args[1] + ".");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You cannot make a(n) " + args[1] + ".");
 					
 				}
 			
@@ -398,18 +419,18 @@ public class Main extends JavaPlugin {
 				
 				if(args.length < 2) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "/arena list <arenas/teams>");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "/arena list <arenas/teams>");
 				
 				}else if(args[1].equalsIgnoreCase("arenas")) {
 					
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "Arenas:" + am.listArenas());
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Arenas:" + am.listArenas());
 					
 				}else if(args[1].equalsIgnoreCase("teams")) {
 					
 					//arena list teams <arena>
 					if(args.length < 3) {
 						
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "You need to specify an arena to list the teams for.");
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "You need to specify an arena to list the teams for.");
 						
 					}else{	
 						
@@ -417,11 +438,11 @@ public class Main extends JavaPlugin {
 
 						if(arena == null) {
 							
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "The specified arena is not an arena.");
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "The specified arena is not an arena.");
 						
 						}else{
 
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Teams:" + arena.listTeams());
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Teams:" + arena.listTeams());
 						
 						}
 							
@@ -429,13 +450,13 @@ public class Main extends JavaPlugin {
 						
 				}else{
 						
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + "That is not an accepted argument (" + args[1] + ")");
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "That is not an accepted argument (" + args[1] + ")");
 						
 				}
 					
 			}else{
 				
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "Invalid command.");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "ArenaPlugin: " + "Invalid command.");
 				
 			}
 			

@@ -7,3 +7,4 @@ commands:
   arena:
     description: Lists all commands for ArenaPlugin
     default: false
+    aliases: ap

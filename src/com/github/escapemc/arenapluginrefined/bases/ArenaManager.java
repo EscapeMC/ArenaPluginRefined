@@ -12,8 +12,10 @@ import org.bukkit.entity.Player;
 public class ArenaManager {
 	
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
+	public ArrayList<String> arenaConfigNames = new ArrayList<String>();
 	private String phs;
 	private String phrase;
+	private String words = "";
 		
 	public ArenaManager() {
 		
@@ -32,6 +34,27 @@ public class ArenaManager {
         return null;
     
     }
+	
+	public void setConfigArenas() {
+		
+		for(Arena a : arenas) {
+			
+			words = a.getName();
+			arenaConfigNames.add(words);
+			
+		}
+		
+	}
+	
+	public void getArenasFromConfig(ArrayList<String> arenaNames) {
+		
+		for(String s : arenaNames) {
+			
+			this.addArena(s.toString());
+			
+		}
+		
+	}
 	
     public String getArenaAndTeam(String uuid) {
 		
