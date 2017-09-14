@@ -22,16 +22,20 @@ public class Main extends JavaPlugin {
 
 	ArenaManager am = new ArenaManager();
 	private List<String> arenaList = new ArrayList<String>();
+	private List<String> blankList = new ArrayList<String>();
 
 	PluginDescriptionFile pdfFile = getDescription();
 	Logger logger = getLogger();
 	
 	public void onEnable() {
 		
+		blankList.add("hi");
+		blankList.clear();
 		arenaList = getConfig().getStringList("arenas");
+		logger.info("-/-/-/-/" + getConfig().getStringList("arenas"));
 		logger.info("------ ArenaList is: " + arenaList);
 		
-		if(arenaList == null) {
+		if(arenaList.equals(blankList)) {
 			
 			logger.info("+++ Config for arenas not found.");
 			
