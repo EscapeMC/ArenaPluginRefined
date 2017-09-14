@@ -32,8 +32,8 @@ public class Main extends JavaPlugin {
 		blankList.add("hi");
 		blankList.clear();
 		arenaList = getConfig().getStringList("arenas");
-		logger.info("-/-/-/-/" + getConfig().getStringList("arenas"));
-		logger.info("------ ArenaList is: " + arenaList);
+		logger.info("-/-/-/-/" + getConfig().getStringList("arenas")); //for testing
+		logger.info("------ ArenaList is: " + arenaList); //for testing
 		
 		if(arenaList.equals(blankList)) {
 			
@@ -42,7 +42,7 @@ public class Main extends JavaPlugin {
 		}else{
 			
 			am.getArenasFromConfig(arenaList);
-			logger.info("**** Config used to load arenas.");
+			logger.info("**** Config used to load arenas."); //for testing
 		
 		}
 		
